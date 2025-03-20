@@ -5,11 +5,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.learning.entity.Admin;
+import com.learning.entity.User;
+
 
 @Repository
-public interface AdminRepository extends JpaRepository<Admin, String> {
+public interface UserRepository extends JpaRepository<User, String> {
 	
-	public Optional<Admin> findByEmail(String email);
+	public Optional<User> findByEmail(String email);
 }
 

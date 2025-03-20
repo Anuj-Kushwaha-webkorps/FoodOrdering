@@ -9,28 +9,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.learning.entity.Admin;
-import com.learning.service.AdminService;
+import com.learning.entity.User;
 import com.learning.service.CaptchaValidatorService;
+import com.learning.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/user")
+public class UserController {
 
     @Autowired
-    private AdminService adminService;
+    private UserService userService;
     
     @Autowired
     private CaptchaValidatorService captchaValidatorService;
 
     @GetMapping("/register")
     public String showRegistrationForm() {
-        return "admin/register";
+        return "user/register";
     }
 
     @PostMapping("/register")
-    public String registerAdmin(@RequestParam("name") String name,
+    public String registerUser(@RequestParam("name") String name,
                                 @RequestParam("email") String email,
                                 @RequestParam("password") String password,
                                 @RequestParam("address") String address,
@@ -41,32 +42,28 @@ public class AdminController {
     	if (!captchaValidatorService.isCaptchaValid(captchaResponse)) {
     		String msgTxt = "Captcha verification failed";
     		model.addAttribute("msg", msgTxt);
-    		System.out.println("error found in recaptcha");
-            return "/admin/login?error=true";
+            return "/user/error";
         }
 
-		System.out.println("successfull in recaptcha");
 
-    	adminService.saveAdmin(name, email, password, address, phone);
-        return "redirect:/admin/login";
+    	userService.saveAdmin(name, email, password, address, phone);
+        return "redirect:/user/login";
     }
 
     @GetMapping("/login")
     public String showLoginForm() {
-        return "admin/login";
+        return "user/login";
     }
     
     @PostMapping("/login")
     public String loginAdmin(@RequestParam("email") String email,
                               @RequestParam("password") String password,
                               HttpSession session) {
-        Admin admin = adminService.authenticateAdmin(email, password);
-        System.out.println(admin);
-        System.out.println(admin.getName());
-        if (admin != null) {
-            session.setAttribute("loggedInAdmin", admin);
-            return "/admin/dashboard";
+        User user = userService.authenticateUser(email, password);
+        if (user != null) {
+            session.setAttribute("loggedInUser", user);
+            return "redirect:/user/dashboard";
         }
-        return "redirect:/admin/login?error=true";
+        return "redirect:/user/login?error=true";
     }
 }

@@ -6,17 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.learning.entity.Admin;
-import com.learning.repository.AdminRepository;
+import com.learning.entity.User;
+import com.learning.repository.UserRepository;
 
 @Service
-public class AdminService {
+public class UserService {
 
     @Autowired
-    private AdminRepository adminRepository;
+    private UserRepository userRepository;
 
     public void saveAdmin(String name, String email, String password, String address, String phone) {
-        Admin admin = Admin.builder()
-                .adminId(java.util.UUID.randomUUID().toString())
+        User user = User.builder()
+                .userId(java.util.UUID.randomUUID().toString())
                 .name(name)
                 .email(email)
                 .password(password) 
@@ -24,13 +25,13 @@ public class AdminService {
                 .phoneNumber(phone)
                 .build();
 
-        adminRepository.save(admin);
+        userRepository.save(user);
     }
     
-    public Admin authenticateAdmin(String email, String password) {
-        Optional<Admin> adminOptional = adminRepository.findByEmail(email);
-        if (adminOptional.isPresent() && adminOptional.get().getPassword().equals(password)) {
-            return adminOptional.get();
+    public User authenticateUser(String email, String password) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent() && userOptional.get().getPassword().equals(password)) {
+            return userOptional.get();
         }
         return null;
     }

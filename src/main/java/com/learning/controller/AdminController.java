@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.learning.entity.Admin;
 import com.learning.service.AdminService;
 import com.learning.service.CaptchaValidatorService;
+import com.learning.service.OrderService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,6 +24,9 @@ public class AdminController {
     
     @Autowired
     private CaptchaValidatorService captchaValidatorService;
+    
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/register")
     public String showRegistrationForm() {
@@ -59,14 +63,21 @@ public class AdminController {
     @PostMapping("/login")
     public String loginAdmin(@RequestParam("email") String email,
                               @RequestParam("password") String password,
-                              HttpSession session) {
+                              HttpSession session, Model model) {
         Admin admin = adminService.authenticateAdmin(email, password);
         System.out.println(admin);
         System.out.println(admin.getName());
         if (admin != null) {
             session.setAttribute("loggedInAdmin", admin);
+            Long pendingOrderCount = orderService.getPendingOrderCountForAdmin(admin.getAdminId());
+            model.addAttribute("pendingOrderCount", pendingOrderCount);
             return "/admin/dashboard";
         }
         return "redirect:/admin/login?error=true";
+    }
+    
+    @GetMapping("/dashboard")
+    public String showDashboard() {
+    	return "/admin/dashboard";
     }
 }

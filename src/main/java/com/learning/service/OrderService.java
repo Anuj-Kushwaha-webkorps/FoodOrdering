@@ -1,18 +1,24 @@
 package com.learning.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.learning.entity.Order;
+import com.learning.entity.Restaurant;
 import com.learning.repository.OrderRepository;
+import com.learning.repository.RestaurantRepository;
 
 @Service
 public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     public List<Order> getOrdersByUserId(String userId) {
         return orderRepository.findByUserUserId(userId);
@@ -32,6 +38,46 @@ public class OrderService {
 
         order.setStatus("CANCELED");
         orderRepository.save(order);
+    }
+    
+    public List<Order> getOrdersByAdminId(String adminId) {
+        List<Restaurant> restaurants = restaurantRepository.findByAdminAdminId(adminId);
+        List<String> restaurantIds = restaurants.stream()
+                .map(Restaurant::getRestaurantId)
+                .collect(Collectors.toList());
+
+        return orderRepository.findByRestaurantIdIn(restaurantIds);
+    }
+   
+
+    public void updateOrderStatus(String orderId, String status) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(status);
+        orderRepository.save(order);
+    }
+    
+    public Long getPendingOrderCountForAdmin(String adminId) {
+        List<Restaurant> restaurants = restaurantRepository.findByAdminAdminId(adminId);
+        List<String> restaurantIds = restaurants.stream()
+                .map(Restaurant::getRestaurantId)
+                .collect(Collectors.toList());
+
+        return orderRepository.countPendingOrders(restaurantIds);
+    }
+    
+    public List<Order> getPastOrdersByAdminId(String adminId) {
+        List<Restaurant> restaurants = restaurantRepository.findByAdminAdminId(adminId);
+        List<String> restaurantIds = restaurants.stream()
+                .map(Restaurant::getRestaurantId)
+                .collect(Collectors.toList());
+
+        return orderRepository.findPastOrdersByRestaurantIds(restaurantIds);
+    }
+    
+    public List<Order> getPastOrdersByUserId(String userId) {
+        return  orderRepository.findByUserUserIdAndStatusNot(userId, "PENDING");
     }
 }
 

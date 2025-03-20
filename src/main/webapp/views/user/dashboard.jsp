@@ -12,7 +12,7 @@
     <li><a href="/user/restaurants">View Available Restaurants</a></li>
 	<li><a href="/user/cart/view">Cart</li>
     <li><a href="/user/orders">My Orders</a></li>
-    <li><a href="/user/order-history">Order History</a></li>
+    <li><a href="/user/orders/history">Order History</a></li>
     <li><a href="/user/logout">Logout</a></li>
 </ul>
 

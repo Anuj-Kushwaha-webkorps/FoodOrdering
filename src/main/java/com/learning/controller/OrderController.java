@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.learning.entity.Admin;
 import com.learning.entity.Order;
 import com.learning.entity.User;
 import com.learning.service.OrderService;
@@ -44,5 +45,17 @@ public class OrderController {
 
         orderService.cancelOrder(orderId, loggedInUser.getUserId());
         return "redirect:/user/orders";
+    }
+    
+    @GetMapping("/history")
+    public String viewOrderHistory(HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/admin/login";
+        }
+
+        List<Order> pastOrders = orderService.getPastOrdersByUserId(loggedInUser.getUserId());
+        model.addAttribute("pastOrders", pastOrders);
+        return "/user/orderHistory"; 
     }
 }

@@ -17,6 +17,7 @@
             <th>Total Price</th>
             <th>Status</th>
             <th>Date</th>
+			<th>Action</th>
         </tr>
         <c:forEach var="order" items="${pastOrders}">
             <tr>
@@ -32,6 +33,14 @@
                 <td>${order.totalPrice}</td>
                 <td>${order.status}</td>
                 <td>${order.orderTime}</td>
+				<td>
+					<c:if test="${order.status == 'ACCEPTED' || order.status == 'COMPLETED'}">
+					                <form action="/admin/orders/send-receipt/${order.orderId}" method="post">
+					                    <input type="hidden" name="recipientEmail" value="${order.user.email}">
+					                    <button type="submit">Send Email</button>
+					                </form>
+					</c:if>
+				</td>
             </tr>
         </c:forEach>
     </table>

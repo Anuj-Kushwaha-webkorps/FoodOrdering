@@ -35,6 +35,11 @@
                             <button type="submit">Cancel</button>
                         </form>
                     </c:if>
+					<c:if test="${order.status == 'ACCEPTED' || order.status == 'COMPLETED'}">
+					               <a href="/user/orders/download-receipt/${order.orderId}">
+					                   <button>Download Receipt</button>
+					               </a>
+					 </c:if>
                 </td>
             </tr>
         </c:forEach>

@@ -1,6 +1,7 @@
 package com.learning.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,10 @@ public class OrderService {
     
     public List<Order> getPastOrdersByUserId(String userId) {
         return  orderRepository.findByUserUserIdAndStatusNot(userId, "PENDING");
+    }
+    
+    public Optional<Order> getOrderById(String orderId){
+    	return orderRepository.findById(orderId);
     }
 }
 

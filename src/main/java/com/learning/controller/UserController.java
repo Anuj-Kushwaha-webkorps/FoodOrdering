@@ -66,4 +66,10 @@ public class UserController {
         }
         return "redirect:/user/login?error=true";
     }
+    
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); 
+        return "redirect:/user/login"; 
+    }
 }

@@ -65,19 +65,28 @@ public class AdminController {
                               @RequestParam("password") String password,
                               HttpSession session, Model model) {
         Admin admin = adminService.authenticateAdmin(email, password);
-        System.out.println(admin);
-        System.out.println(admin.getName());
+        
         if (admin != null) {
             session.setAttribute("loggedInAdmin", admin);
             Long pendingOrderCount = orderService.getPendingOrderCountForAdmin(admin.getAdminId());
             model.addAttribute("pendingOrderCount", pendingOrderCount);
             return "/admin/dashboard";
         }
-        return "redirect:/admin/login?error=true";
+        return "redirect:/admin/login";
+    }
+    
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); 
+        return "redirect:/admin/login"; 
     }
     
     @GetMapping("/dashboard")
-    public String showDashboard() {
+    public String showDashboard(HttpSession session) {
+    	Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
+        if (loggedInAdmin == null) {
+            return "redirect:/admin/login"; 
+        }
     	return "/admin/dashboard";
     }
 }

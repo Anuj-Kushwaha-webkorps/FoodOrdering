@@ -52,4 +52,10 @@ public class Order {
     protected void onCreate() {
         orderTime = LocalDateTime.now();
     }
+    
+    @Override
+    public String toString() {
+        return "Order";
+        // Exclude orderItems to avoid recursion
+    }
 }

@@ -12,5 +12,7 @@ import com.learning.entity.User;
 public interface UserRepository extends JpaRepository<User, String> {
 	
 	public Optional<User> findByEmail(String email);
+	
+	public Optional<User> findByName(String name);
 }
 

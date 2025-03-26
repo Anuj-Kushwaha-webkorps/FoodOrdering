@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.learning.entity.Admin;
 import com.learning.entity.Restaurant;
+import com.learning.helper.Validation;
 import com.learning.service.RestaurantService;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,13 +29,13 @@ public class RestaurantController {
     public String showRestaurants(Model model, HttpSession session) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/login?error=Unauthorized+Access";
         }
         List<Restaurant> restaurants = restaurantService.getRestaurantsByAdminId(loggedInAdmin.getAdminId());
         model.addAttribute("restaurants", restaurants);
         model.addAttribute("restaurantCount", restaurants.size());
 
-        return "/admin/restaurant";
+        return "admin/restaurant";
     }
     
     @GetMapping("/add")
@@ -49,8 +50,13 @@ public class RestaurantController {
                                 HttpSession session) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/login?error=Unauthorized+Access";
         }
+        
+        if(!Validation.isValidPhoneNumber(contact)) {
+        	return "redirect:/admin/restaurants/add?error=Invalid+Phone+number";
+        }
+        
         restaurantService.addRestaurant(name, address, contact, loggedInAdmin.getAdminId());
         return "redirect:/admin/restaurants";
     }
@@ -67,6 +73,9 @@ public class RestaurantController {
                                  @RequestParam("name") String name,
                                  @RequestParam("address") String address,
                                  @RequestParam("contact") String contact) {
+    	if(!Validation.isValidPhoneNumber(contact)) {
+        	return "redirect:/admin/restaurants/edit/"+restaurantId+"?error=Invalid+Phone+number";
+        }
         restaurantService.updateRestaurant(restaurantId, name, address, contact);
         return "redirect:/admin/restaurants";
     }

@@ -4,14 +4,77 @@
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/css/style.css">
 	<style>
-		.notification{
-			color : white;
-			background-color : red;
-			padding : 4px;
-			border-radius : 40%;
-			text-decoration : none;
-			text-style : none;
+	 
+		body {
+		    font-family: Arial, sans-serif;
+		    background-color: #f8f9fa;
+		    margin: 0;
+		    padding: 0;
+		    text-align: center;
 		}
+ 
+		h2 {
+		    background-color: #007bff;
+		    color: white;
+		    padding: 15px;
+		    margin: 0;
+		    font-size: 24px;
+		}
+ 
+		ul {
+		    list-style: none;
+		    padding: 0;
+		    margin: 20px auto;
+		    width: 300px;
+		}
+
+		li {
+		    margin: 15px 0;
+		}
+
+		li a {
+		    display: block;
+		    text-decoration: none;
+		    background-color: #007bff;
+		    color: white;
+		    padding: 12px;
+		    border-radius: 5px;
+		    font-size: 16px;
+		    transition: background 0.3s ease;
+		}
+
+		li a:hover {
+		    background-color: #0056b3;
+		}
+ 
+		.notification {
+		    background: red;
+		    color: white;
+		    padding: 5px 8px;
+		    border-radius: 50%;
+		    font-size: 14px;
+		    margin-left: 8px;
+		}
+ 
+		li a[href*="logout"] {
+		    background-color: #dc3545;
+		}
+
+		li a[href*="logout"]:hover {
+		    background-color: #c82333;
+		}
+ 
+		@media (max-width: 600px) {
+		    ul {
+		        width: 90%;
+		    }
+
+		    li a {
+		        font-size: 14px;
+		        padding: 10px;
+		    }
+		}
+
 	</style>
 </head>
 <body>

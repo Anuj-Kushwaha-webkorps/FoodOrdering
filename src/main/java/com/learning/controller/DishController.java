@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.learning.entity.Dish;
+import com.learning.helper.Validation;
 import com.learning.service.DishService;
 
 import java.util.List;
@@ -38,6 +39,11 @@ public class DishController {
                           @RequestParam("price") Double price,
                           @RequestParam("dishType") String dishType,
                           @RequestParam("dishSize") String dishSize) {
+    	
+    	if(!Validation.priceValidation(price+"")) {
+    		return "redirect:/admin/restaurants/" + restaurantId + "/dishes/add?error=Invalid+Price";
+    	}
+    	
         dishService.addDish(restaurantId, name, description, price, dishType, dishSize);
         return "redirect:/admin/restaurants/" + restaurantId + "/dishes";
     }
@@ -58,6 +64,11 @@ public class DishController {
                            @RequestParam("price") Double price,
                            @RequestParam("dishType") String dishType,
                            @RequestParam("dishSize") String dishSize) {
+    	
+    	if(!Validation.priceValidation(price+"")) {
+    		return "redirect:/admin/restaurants/" + restaurantId + "/dishes/edit/"+ dishId +"?error=Invalid+Price";
+    	}
+    	
         dishService.updateDish(dishId, name, description, price, dishType, dishSize);
         return "redirect:/admin/restaurants/" + restaurantId + "/dishes";
     }

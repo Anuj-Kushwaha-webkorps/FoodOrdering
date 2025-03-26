@@ -36,19 +36,19 @@ public class OrderController {
     public String viewUserOrders(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/user/login?error=Unauthorized+Access";
         }
 
         List<Order> userOrders = orderService.getOrdersByUserId(loggedInUser.getUserId());
         model.addAttribute("orders", userOrders);
-        return "/user/orders"; // orders.jsp
+        return "user/orders";
     }
 
     @PostMapping("/cancel/{orderId}")
     public String cancelOrder(@PathVariable String orderId, HttpSession session) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/user/login?error=Unauthorized+Access";
         }
 
         orderService.cancelOrder(orderId, loggedInUser.getUserId());
@@ -64,7 +64,7 @@ public class OrderController {
 
         List<Order> pastOrders = orderService.getPastOrdersByUserId(loggedInUser.getUserId());
         model.addAttribute("pastOrders", pastOrders);
-        return "/user/orderHistory"; 
+        return "user/orderHistory"; 
     }
     
     @GetMapping("/download-receipt/{orderId}")

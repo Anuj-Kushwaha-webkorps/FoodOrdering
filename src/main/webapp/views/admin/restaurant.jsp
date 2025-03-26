@@ -5,6 +5,76 @@
     <title>Manage Restaurants</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
+<style>
+	body {
+	    font-family: Arial, sans-serif;
+	    background-color: #f8f9fa;
+	    margin: 0;
+	    padding: 20px;
+	    text-align: center;
+	}
+
+	h2 {
+	    background-color: #007bff;
+	    color: white;
+	    padding: 15px;
+	    border-radius: 5px;
+	    display: inline-block;
+	}
+
+	table {
+	    width: 90%;
+	    margin: 20px auto;
+	    border-collapse: collapse;
+	    background: white;
+	    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	}
+
+	th, td {
+	    border: 1px solid #ddd;
+	    padding: 12px;
+	    text-align: center;
+	}
+
+	th {
+	    background-color: #007bff;
+	    color: white;
+	}
+
+	a {
+	    display: inline-block;
+	    margin: 10px;
+	    padding: 8px 12px;
+	    background-color: #28a745;
+	    color: white;
+	    text-decoration: none;
+	    border-radius: 5px;
+	}
+
+	a:hover {
+	    background-color: #218838;
+	}
+
+	a.delete {
+	    background-color: #dc3545;
+	}
+
+	a.delete:hover {
+	    background-color: #c82333;
+	}
+
+	@media (max-width: 768px) {
+	    table {
+	        width: 100%;
+	    }
+
+	    a {
+	        font-size: 14px;
+	        padding: 8px 12px;
+	    }
+	}
+
+</style>
 <body>
 <h2>Manage Restaurants</h2>
 
@@ -36,5 +106,6 @@
     <p>No restaurants found.</p>
 </c:if>
 
+<a href="/admin/dashboard">Back to Dashboard</a>
 </body>
 </html>

@@ -81,14 +81,13 @@ public class CartController {
     @PostMapping("/update")
     public String updateCartItem(@RequestParam("dishId") String dishId,
                                  @RequestParam("quantity") int quantity,
-                                 @RequestParam("dishSize") String dishSize,
                                  HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
             for (CartItem item : cart) {
                 if (item.getDishId().equals(dishId)) {
                     item.setQuantity(quantity);
-                    item.setDishSize(dishSize);
+                   // item.setDishSize(dishSize);
                     break;
                 }
             }
@@ -120,7 +119,7 @@ public class CartController {
         model.addAttribute("cart", cart);
         model.addAttribute("totalPrice", totalPrice);
         
-        return "/user/checkout";
+        return "user/checkout";
     }
     
     @PostMapping("/confirm-order")

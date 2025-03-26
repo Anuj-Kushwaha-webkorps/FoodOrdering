@@ -34,19 +34,19 @@ public class AdminOrderController {
     public String viewOrders(HttpSession session, Model model) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/login?error=Unauthorize+Access";
         }
 
         List<Order> adminOrders = orderService.getOrdersByAdminId(loggedInAdmin.getAdminId());
         model.addAttribute("orders", adminOrders);
-        return "admin/orders"; // admin/orders.jsp
+        return "admin/orders"; 
     }
 
     @PostMapping("/accept/{orderId}")
     public String acceptOrder(@PathVariable String orderId, HttpSession session) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/login?error=Unauthorize+Access";
         }
 
         orderService.updateOrderStatus(orderId, "ACCEPTED");
@@ -57,7 +57,7 @@ public class AdminOrderController {
     public String rejectOrder(@PathVariable String orderId, HttpSession session) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/login?error=Unauthorize+Access";
         }
 
         orderService.updateOrderStatus(orderId, "REJECTED");
@@ -68,21 +68,21 @@ public class AdminOrderController {
     public String viewOrderHistory(HttpSession session, Model model) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
         if (loggedInAdmin == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/login?error=Unauthorize+Access";
         }
 
         List<Order> pastOrders = orderService.getPastOrdersByAdminId(loggedInAdmin.getAdminId());
         model.addAttribute("pastOrders", pastOrders);
-        return "/admin/orderHistory"; 
+        return "admin/orderHistory"; 
     }
     
     @PostMapping("/send-receipt/{orderId}")
     public String sendReceiptEmail(@PathVariable String orderId, @RequestParam String recipientEmail) {
         try {
             emailService.sendOrderReceipt(orderId, recipientEmail);
-            return "redirect:/admin/order/history";
+            return "redirect:/admin/orders/history?success=Mail+Sent+successfully";
         } catch (MessagingException e) {
-            return "redirect:/admin/order/hitory?error=Mail&Not&Sent";
+            return "admin/orderHistory?error=Mail+Not+Sent";
         }
     }
 }

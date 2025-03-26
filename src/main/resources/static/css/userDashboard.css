@@ -1,0 +1,49 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Header */
+h2 {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    margin: 0;
+}
+
+/* Navigation */
+ul {
+    list-style: none;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 300px;
+}
+
+ul li {
+    margin: 10px 0;
+}
+
+ul li a {
+    display: block;
+    text-decoration: none;
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+ul li a:hover {
+    background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    ul {
+        max-width: 90%;
+    }
+}

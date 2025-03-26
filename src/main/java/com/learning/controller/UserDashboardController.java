@@ -17,7 +17,7 @@ public class UserDashboardController {
     public String showUserDashboard(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/user/login?error=Unauthorized+Access";
         }
         model.addAttribute("user", loggedInUser);
         return "user/dashboard";

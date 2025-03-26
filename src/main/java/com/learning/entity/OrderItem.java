@@ -41,5 +41,11 @@ public class OrderItem {
 
     @Column(name = "price_per_item", nullable = false)
     private Double pricePerItem;
+    
+    @Override
+    public String toString() {
+        return "OrderItem";
+        // Exclude orderItems to avoid recursion
+    }
 }
 

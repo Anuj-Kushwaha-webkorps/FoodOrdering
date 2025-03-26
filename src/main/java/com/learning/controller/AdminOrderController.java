@@ -33,9 +33,6 @@ public class AdminOrderController {
     @GetMapping
     public String viewOrders(HttpSession session, Model model) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/login?error=Unauthorize+Access";
-        }
 
         List<Order> adminOrders = orderService.getOrdersByAdminId(loggedInAdmin.getAdminId());
         model.addAttribute("orders", adminOrders);
@@ -44,22 +41,12 @@ public class AdminOrderController {
 
     @PostMapping("/accept/{orderId}")
     public String acceptOrder(@PathVariable String orderId, HttpSession session) {
-        Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/login?error=Unauthorize+Access";
-        }
-
         orderService.updateOrderStatus(orderId, "ACCEPTED");
         return "redirect:/admin/orders";
     }
 
     @PostMapping("/reject/{orderId}")
     public String rejectOrder(@PathVariable String orderId, HttpSession session) {
-        Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/login?error=Unauthorize+Access";
-        }
-
         orderService.updateOrderStatus(orderId, "REJECTED");
         return "redirect:/admin/orders";
     }

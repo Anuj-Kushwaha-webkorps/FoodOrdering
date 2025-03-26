@@ -38,13 +38,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         	return new org.springframework.security.core.userdetails.User(
                     user.get().getEmail(),
                     user.get().getPassword(),
-                    new ArrayList<>()  // Authorities (roles) can be added here if needed
+                    new ArrayList<>() 
             );
         }else {
         	return new org.springframework.security.core.userdetails.User(
                     admin.get().getEmail(),
                     admin.get().getPassword(),
-                    new ArrayList<>()  // Authorities (roles) can be added here if needed
+                    new ArrayList<>() 
             );
         }
         

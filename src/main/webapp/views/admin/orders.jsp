@@ -112,7 +112,7 @@
             <th>Actions</th>
         </tr>
         <c:forEach var="order" items="${orders}">
-			<c:if test="${!(order.status== 'CANCELED' || order.status == 'COMPLETED')}">
+			<c:if test="${!(order.status== 'CANCELED' || order.status == 'COMPLETED' || order.status == 'REJECTED')}">
             <tr>
                 <td>${order.orderId}</td>
                 <td>${order.user.name}</td>

@@ -28,13 +28,9 @@ public class RestaurantController {
     @GetMapping
     public String showRestaurants(Model model, HttpSession session) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/login?error=Unauthorized+Access";
-        }
         List<Restaurant> restaurants = restaurantService.getRestaurantsByAdminId(loggedInAdmin.getAdminId());
         model.addAttribute("restaurants", restaurants);
         model.addAttribute("restaurantCount", restaurants.size());
-
         return "admin/restaurant";
     }
     

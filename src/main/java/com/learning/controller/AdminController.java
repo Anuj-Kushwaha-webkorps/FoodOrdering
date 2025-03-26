@@ -49,7 +49,6 @@ public class AdminController {
     	if (!captchaValidatorService.isCaptchaValid(captchaResponse)) {
     		String msgTxt = "Captcha verification failed";
     		model.addAttribute("msg", msgTxt);
-    		System.out.println("error found in recaptcha");
             return "redirect:/admin/register?error=Captcha+Invalid";
         }
     	
@@ -67,7 +66,7 @@ public class AdminController {
             return "redirect:/admin/register?error=Invalid+phone+number "+msg;
     	}
 
-    	adminService.saveAdmin(name, email, password, address, phone);
+    	adminService.saveAdmin(name, email.trim(), password.trim(), address, phone);
         return "redirect:/admin/login";
     }
 
@@ -80,7 +79,7 @@ public class AdminController {
     public String loginAdmin(@RequestParam("email") String email,
                               @RequestParam("password") String password,
                               HttpSession session, Model model) {
-        Admin admin = adminService.authenticateAdmin(email, password);
+        Admin admin = adminService.authenticateAdmin(email.trim(), password.trim());
         
         if (admin != null) {
             session.setAttribute("loggedInAdmin", admin);
@@ -102,9 +101,6 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String showDashboard(HttpSession session, Model model) {
     	Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/login"; 
-        }
         
         Long pendingOrderCount = orderService.getPendingOrderCountForAdmin(loggedInAdmin.getAdminId());
         model.addAttribute("pendingOrderCount", pendingOrderCount);

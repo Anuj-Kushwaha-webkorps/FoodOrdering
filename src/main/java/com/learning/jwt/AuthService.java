@@ -5,7 +5,6 @@ import com.learning.entity.User;
 import com.learning.repository.AdminRepository;
 import com.learning.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service

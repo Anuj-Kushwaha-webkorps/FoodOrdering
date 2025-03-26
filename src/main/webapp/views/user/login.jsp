@@ -62,6 +62,16 @@
 	button:hover {
 	    background-color: #218838;
 	}
+	a {
+			    display: block;
+			    text-decoration: none;
+			    background-color: #007bff;
+			    color: white;
+			    padding: 12px;
+			    border-radius: 5px;
+			    font-size: 16px;
+			    transition: background 0.3s ease;
+			}
 
 	@media (max-width: 600px) {
 	    form {
@@ -81,6 +91,9 @@
 
     <button type="submit">Login</button>
 </form>
+
+<a href="/">Home</a>
+
 
 <script>
 	<% 

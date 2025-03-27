@@ -1,6 +1,7 @@
 package com.learning.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.learning.entity.Admin;
-import com.learning.helper.Validation;
-import com.learning.jwt.AuthService;
 import com.learning.service.AdminService;
-import com.learning.service.CaptchaValidatorService;
 import com.learning.service.OrderService;
 
 import jakarta.servlet.http.HttpSession;
@@ -20,14 +18,10 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-	@Autowired
-    private AuthService authService;
+	
 
     @Autowired
     private AdminService adminService;
-    
-    @Autowired
-    private CaptchaValidatorService captchaValidatorService;
     
     @Autowired
     private OrderService orderService;
@@ -44,30 +38,8 @@ public class AdminController {
                                 @RequestParam("address") String address,
                                 @RequestParam("phone") String phone,
                                 @RequestParam("g-recaptcha-response") String captchaResponse,
-                                Model model) {
-        
-    	if (!captchaValidatorService.isCaptchaValid(captchaResponse)) {
-    		String msgTxt = "Captcha verification failed";
-    		model.addAttribute("msg", msgTxt);
-            return "redirect:/admin/register?error=Captcha+Invalid";
-        }
-    	
-    	if(!Validation.emailValidation(email)) {
-            return "redirect:/admin/register?error=Invalid+Email+Details";
-    	}
-    	
-    	if(!Validation.passwordValidation(password)) {
-    		String msg = "Password must have at least 8 character with atleast 1 small and capital letter, 1 digit and 1 Special character";
-            return "redirect:/admin/register?error=Invalid+password "+msg;
-    	}
-    	
-    	if(!Validation.isValidPhoneNumber(phone)) {
-    		String msg = "Invalide phone number ! phone number must have 10 digits.";
-            return "redirect:/admin/register?error=Invalid+phone+number "+msg;
-    	}
-
-    	adminService.saveAdmin(name, email.trim(), password.trim(), address, phone);
-        return "redirect:/admin/login";
+                                Model model) {       
+    	return adminService.saveAdmin(name, email, password, address, phone, captchaResponse, model);     
     }
 
     @GetMapping("/login")
@@ -79,29 +51,19 @@ public class AdminController {
     public String loginAdmin(@RequestParam("email") String email,
                               @RequestParam("password") String password,
                               HttpSession session, Model model) {
-        Admin admin = adminService.authenticateAdmin(email.trim(), password.trim());
-        
-        if (admin != null) {
-            session.setAttribute("loggedInAdmin", admin);
-            String token = authService.login(email, password, "Admin");
-            session.setAttribute("jwtToken", token);
-            Long pendingOrderCount = orderService.getPendingOrderCountForAdmin(admin.getAdminId());
-            model.addAttribute("pendingOrderCount", pendingOrderCount);
-            return "admin/dashboard";
-        }
-        return "redirect:/admin/login?error=Invalid+Details";
+    	return adminService.authenticateAdmin(email.trim(), password.trim(),session,model);
     }
     
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); 
+        SecurityContextHolder.clearContext();
         return "redirect:/admin/login"; 
     }
     
     @GetMapping("/dashboard")
     public String showDashboard(HttpSession session, Model model) {
-    	Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        
+    	Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");     
         Long pendingOrderCount = orderService.getPendingOrderCountForAdmin(loggedInAdmin.getAdminId());
         model.addAttribute("pendingOrderCount", pendingOrderCount);
     	return "admin/dashboard";

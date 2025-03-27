@@ -3,7 +3,6 @@ package com.learning.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +32,6 @@ public class AdminOrderController {
     @GetMapping
     public String viewOrders(HttpSession session, Model model) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-
         List<Order> adminOrders = orderService.getOrdersByAdminId(loggedInAdmin.getAdminId());
         model.addAttribute("orders", adminOrders);
         return "admin/orders"; 
@@ -54,10 +52,6 @@ public class AdminOrderController {
     @GetMapping("/history")
     public String viewOrderHistory(HttpSession session, Model model) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/login?error=Unauthorize+Access";
-        }
-
         List<Order> pastOrders = orderService.getPastOrdersByAdminId(loggedInAdmin.getAdminId());
         model.addAttribute("pastOrders", pastOrders);
         return "admin/orderHistory"; 

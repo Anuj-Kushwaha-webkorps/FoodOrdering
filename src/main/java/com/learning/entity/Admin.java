@@ -34,7 +34,7 @@ public class Admin {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "phone_number", nullable = false, unique = true)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 }
 

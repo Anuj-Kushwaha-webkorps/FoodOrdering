@@ -31,7 +31,7 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeRequests()
-            .requestMatchers("/", "/user/register", "/user/login", "/admin/register", "/admin/login").permitAll() 
+            .requestMatchers("/","/error","/views/admin/login.jsp", "/user/register", "/user/login", "/admin/register", "/admin/login").permitAll() 
             .requestMatchers("/views/**").permitAll()
             .requestMatchers("/resources/**", "/static/**", "/templates/**").permitAll() 
             .anyRequest().authenticated()

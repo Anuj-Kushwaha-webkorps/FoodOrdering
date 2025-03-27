@@ -18,11 +18,11 @@ public class OrderScheduler {
 
     @Scheduled(fixedRate = 30000) 
     public void cancelUnacceptedOrders() {
-        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
+        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(1);
         List<Order> pendingOrders = orderRepository.findByStatusAndOrderTimeBefore("PENDING", fiveMinutesAgo);
 
         for (Order order : pendingOrders) {
-            order.setStatus("CANCELED");
+            order.setStatus("REJECTED");
             orderRepository.save(order);
             System.out.println("Order " + order.getOrderId() + " auto-canceled after 5 minutes.");
         }

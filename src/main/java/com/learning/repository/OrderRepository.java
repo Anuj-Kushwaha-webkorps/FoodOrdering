@@ -25,4 +25,7 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     
     @Query("SELECT o FROM Order o WHERE o.restaurantId IN :restaurantIds AND o.status IN ('ACCEPTED', 'COMPLETED', 'REJECTED')")
     List<Order> findPastOrdersByRestaurantIds(@Param("restaurantIds") List<String> restaurantIds);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.user.userId = :userId AND o.status IN ('ACCEPTED', 'REJECTED')")
+    Long countAcceptedAndRejectedOrders(@Param("userId") String userId);
 }

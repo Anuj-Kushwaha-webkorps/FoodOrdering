@@ -48,5 +48,7 @@
     <c:if test="${not empty referer}">
         <a href="${referer}">Go Back</a>
     </c:if>
+	
+	<a href="/">home</a>
 </body>
 </html>

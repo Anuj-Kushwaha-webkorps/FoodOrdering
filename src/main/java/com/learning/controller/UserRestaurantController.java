@@ -34,8 +34,7 @@ public class UserRestaurantController {
     @GetMapping("/restaurants/{restaurantId}/dishes")
     public String showDishes(@PathVariable String restaurantId, Model model) {
         List<Dish> dishes = dishService.getDishesByRestaurantId(restaurantId);
-        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
-        
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);        
         model.addAttribute("dishes", dishes);
         model.addAttribute("restaurant", restaurant);
         return "user/dishes";

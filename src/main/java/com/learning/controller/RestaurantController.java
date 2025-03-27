@@ -45,9 +45,6 @@ public class RestaurantController {
                                 @RequestParam("contact") String contact,
                                 HttpSession session) {
         Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
-        if (loggedInAdmin == null) {
-            return "redirect:/admin/login?error=Unauthorized+Access";
-        }
         
         if(!Validation.isValidPhoneNumber(contact)) {
         	return "redirect:/admin/restaurants/add?error=Invalid+Phone+number";

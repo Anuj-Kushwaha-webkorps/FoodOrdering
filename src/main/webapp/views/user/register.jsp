@@ -76,7 +76,6 @@
 			    padding: 12px;
 			    border-radius: 5px;
 			    font-size: 16px;
-			    transition: background 0.3s ease;
 			}
  
 	@media (max-width: 600px) {

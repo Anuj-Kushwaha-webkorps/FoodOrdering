@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String email = null;
         String jwt = null;
 
+        try {
         if (header != null && header.startsWith("Bearer ")) {
             jwt = header.substring(7).trim();
             email = jwtUtil.extractEmail(jwt);
@@ -52,6 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
+    	
+    }catch(io.jsonwebtoken.ExpiredJwtException ex){
+    	System.out.println("redirecting to login page from unauth");
+    	response.sendRedirect("/admin/login");
+    }
         chain.doFilter(request, response);
     }
 }

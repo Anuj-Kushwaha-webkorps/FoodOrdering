@@ -170,5 +170,16 @@
 
 <a href="/user/restaurants">Back to Restaurants</a>
 <a href="/user/dashboard">Back to Dashboard</a>
+
+<script>
+	<% 
+	  String error = request.getParameter("error");
+	  System.out.println(error);
+	  if (error != null) { 
+	  %>
+	      alert("<%= error %>"); 
+	<% } %>
+
+</script>
 </body>
 </html>

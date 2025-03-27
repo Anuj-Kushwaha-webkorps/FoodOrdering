@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import com.learning.entity.Admin;
 import com.learning.entity.Order;
 import com.learning.entity.User;
 import com.learning.service.OrderService;
@@ -35,10 +34,6 @@ public class OrderController {
     @GetMapping
     public String viewUserOrders(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return "redirect:/user/login?error=Unauthorized+Access";
-        }
-
         List<Order> userOrders = orderService.getOrdersByUserId(loggedInUser.getUserId());
         model.addAttribute("orders", userOrders);
         return "user/orders";
@@ -47,10 +42,6 @@ public class OrderController {
     @PostMapping("/cancel/{orderId}")
     public String cancelOrder(@PathVariable String orderId, HttpSession session) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return "redirect:/user/login?error=Unauthorized+Access";
-        }
-
         orderService.cancelOrder(orderId, loggedInUser.getUserId());
         return "redirect:/user/orders";
     }
@@ -58,10 +49,6 @@ public class OrderController {
     @GetMapping("/history")
     public String viewOrderHistory(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return "redirect:/admin/login";
-        }
-
         List<Order> pastOrders = orderService.getPastOrdersByUserId(loggedInUser.getUserId());
         model.addAttribute("pastOrders", pastOrders);
         return "user/orderHistory"; 
@@ -70,11 +57,6 @@ public class OrderController {
     @GetMapping("/download-receipt/{orderId}")
     public ResponseEntity<byte[]> downloadReceipt(@PathVariable String orderId) {
         Optional<Order> orderOptional = orderService.getOrderById(orderId);
-        
-        if (orderOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
         Order order = orderOptional.get();
         byte[] pdfBytes = pdfService.generateReceipt(order);
 

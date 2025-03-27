@@ -45,7 +45,6 @@ public class OrderItem {
     @Override
     public String toString() {
         return "OrderItem";
-        // Exclude orderItems to avoid recursion
     }
 }
 

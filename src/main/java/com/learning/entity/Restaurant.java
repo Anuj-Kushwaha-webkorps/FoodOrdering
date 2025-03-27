@@ -29,7 +29,7 @@ public class Restaurant {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "contact_number", nullable = false, unique = true)
+    @Column(name = "contact_number", nullable = false)
     private String contactNumber;
 
     @ManyToOne

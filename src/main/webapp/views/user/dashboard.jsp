@@ -46,6 +46,14 @@
 	    background-color: #218838;
 	}
 
+	.notification {
+			    background: red;
+			    color: white;
+			    padding: 5px 8px;
+			    border-radius: 50%;
+			    font-size: 14px;
+			    margin-left: 8px;
+			}
 	@media (max-width: 600px) {
 	    ul {
 	        max-width: 90%;
@@ -59,7 +67,7 @@
 <ul>
     <li><a href="/user/restaurants">View Available Restaurants</a></li>
 	<li><a href="/user/cart/view">Cart</a></li>
-    <li><a href="/user/orders">My Orders</a></li>
+    <li><a href="/user/orders">My Orders <Strong class="notification"> ${notification} </Strong></a></li>
     <li><a href="/user/orders/history">Order History</a></li>
     <li><a href="/user/logout">Logout</a></li>
 </ul>

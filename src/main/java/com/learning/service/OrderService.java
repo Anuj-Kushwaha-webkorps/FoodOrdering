@@ -81,6 +81,10 @@ public class OrderService {
         return  orderRepository.findByUserUserIdAndStatusNot(userId, "PENDING");
     }
     
+    public Long getAcceptedAndRejectedOrdersByUserId(String userId) {
+        return  orderRepository.countAcceptedAndRejectedOrders(userId);
+    }
+    
     public Optional<Order> getOrderById(String orderId){
     	return orderRepository.findById(orderId);
     }

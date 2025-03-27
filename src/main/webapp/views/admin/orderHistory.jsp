@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
-	```css
+	
 	body {
 	    font-family: Arial, sans-serif;
 	    background-color: #f8f9fa;
@@ -92,7 +92,7 @@
 	        padding: 8px 12px;
 	    }
 	}
-	```
+	
 </style>
 <body>
 <h2>Order History</h2>
@@ -155,7 +155,7 @@
 	  		  System.out.println(success);
 	  		  if (success != null) { 
 	  		  %>
-	  		      alert("<%= error %>"); 
+	  		      alert("<%= success %>"); 
 	  	<% } %>
 	</script>
 

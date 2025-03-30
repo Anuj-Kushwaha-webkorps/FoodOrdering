@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>Edit Cart Item</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
 	body {

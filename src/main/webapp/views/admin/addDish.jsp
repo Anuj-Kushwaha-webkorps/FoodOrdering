@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>Add Dish</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
 	body {

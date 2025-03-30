@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>User Dashboard</title>
-    <link rel="stylesheet" href="/css/userDashboard.css">
 </head>
 <style>
 	body {

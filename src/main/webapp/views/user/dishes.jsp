@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>${restaurant.name} - Menu</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
 

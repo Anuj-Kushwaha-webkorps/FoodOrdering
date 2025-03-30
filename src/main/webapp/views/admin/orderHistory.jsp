@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>Order History</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
 	

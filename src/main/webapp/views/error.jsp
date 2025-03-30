@@ -50,5 +50,6 @@
     </c:if>
 	
 	<a href="/">home</a>
+	
 </body>
 </html>

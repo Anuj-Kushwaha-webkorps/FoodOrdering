@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("errorMessage", ex.getMessage());
         mav.addObject("url", request.getRequestURL());
-        mav.addObject("referer", request.getHeader("Referer")); // Previous page
+        mav.addObject("referer", request.getHeader("Referer")); 
         return mav;
     }
 }

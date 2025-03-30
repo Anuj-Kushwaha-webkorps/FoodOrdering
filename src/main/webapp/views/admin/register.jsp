@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Admin Registration</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
 
@@ -107,12 +106,45 @@
 	<!-- Google reCAPTCHA -->
 	<div class="g-recaptcha" data-sitekey="6LfJFvcqAAAAAMu6gbNsXjNPR338LkK1_ZFlx4YE"></div>
 
-    <button type="submit">Register</button>
+    <button id="submitBtn" type="submit">Register</button>
 </form>
 
 <a href="/">Home</a>
 
 <script>
+	
+	document.getElementById('submitBtn').addEventListener('click',
+	    function(e) {
+			e.preventDefault();
+			console.log("anuj");
+	        const formData = {
+	            name: document.querySelector('input[name="name"]').value,
+	            email: document.querySelector('input[name="email"]').value,
+	            password: document.querySelector('input[name="password"]').value,
+	            address : document.querySelector('textarea[name="address"]').value,
+				phone : document.querySelector('input[name="phone"]').value,
+				recaptcha: grecaptcha.getResponse()
+	        };
+	        fetch('/admin/register', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json' 
+	            },
+	            body: JSON.stringify(formData)
+	        })
+	        .then(response => response.json())  
+	        .then(data => {
+	            if (data.redirectUrl) {
+	            	console.log("in redirect");
+	            	 window.location.href = data.redirectUrl;
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	        });
+	    }
+	    );
+	
 	<% 
 	  String error = request.getParameter("error");
 	  System.out.println(error);
@@ -123,7 +155,6 @@
 </script>
 
 
-<!-- reCAPTCHA Script -->
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 </body>

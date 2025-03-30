@@ -28,7 +28,7 @@ public class OrderScheduler {
         }
     }
     
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = 200000)
     public void updateAcceptedOrders() {
     	List<Order> acceptedOrders = orderRepository.findByStatus("ACCEPTED");
     	

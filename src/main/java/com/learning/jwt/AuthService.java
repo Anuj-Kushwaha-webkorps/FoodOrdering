@@ -21,7 +21,6 @@ public class AuthService {
 
     public String login(String email, String password, String role) {
     	
-    	System.out.println(email +" " + password);
     	if(role.equals("User")) {
     		User user = userRepository.findByEmail(email).orElse(null);
             if (user != null && password.equals(user.getPassword())) {

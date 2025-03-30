@@ -21,7 +21,6 @@ public class JwtSessionFilter extends OncePerRequestFilter {
         if (session != null && session.getAttribute("jwtToken") != null) {
             String jwtToken = (String) session.getAttribute("jwtToken");
             
-            // Modifying request to include Authorization jwtToken in header from session.
             HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(request) {
                 @Override
                 public String getHeader(String name) {

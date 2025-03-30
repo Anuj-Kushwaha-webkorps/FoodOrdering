@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>Add Restaurant</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <Style>
  

@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/css/style.css">
 	<style>
 	 
 		body {

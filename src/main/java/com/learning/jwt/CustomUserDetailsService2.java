@@ -4,40 +4,38 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.learning.entity.Admin;
-import com.learning.repository.AdminRepository;
+import com.learning.entity.User;
+import com.learning.repository.UserRepository;
 
-@Primary
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService2 implements UserDetailsService {
 
-    
     @Autowired
-    private AdminRepository adminRepository;
+    private UserRepository userRepository;
+    
 
     
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("custom admin load");
+        Optional<User> user = userRepository.findByEmail(email);
+        System.out.println("custom user load");
 
-        Optional<Admin> admin = adminRepository.findByEmail(email);
-        
-        if(admin.isPresent()) {        	
+        if(user.isPresent()) {        	
         	return new org.springframework.security.core.userdetails.User(
-        			admin.get().getEmail(),
-        			admin.get().getPassword(),
+        			user.get().getEmail(),
+        			user.get().getPassword(),
         			new ArrayList<>() 
         			);
         }else {
-            throw new UsernameNotFoundException("User not found with email: " + email);
+              throw new UsernameNotFoundException("User not found with email: " + email);
 
         }
+
         
     }
 }

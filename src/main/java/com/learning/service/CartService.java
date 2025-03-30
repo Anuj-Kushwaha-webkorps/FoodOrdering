@@ -28,7 +28,8 @@ public class CartService {
     private OrderRepository orderRepository;
 
 	public String addToCart(String dishId, HttpSession session) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        @SuppressWarnings("unchecked")
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         Dish dish = dishService.getDishById(dishId);
         String adminId2 = dishService.getDishById(dish.getDishId()).getRestaurant().getAdmin().getAdminId();
         String adminId1 = "";
@@ -59,6 +60,7 @@ public class CartService {
 	}
 	
 	public String viewCart(HttpSession session, Model model) {
+		@SuppressWarnings("unchecked")
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null) {
             cart = new ArrayList<>();
@@ -68,6 +70,7 @@ public class CartService {
 	}
 
 	public String editCartItem(String dishId, HttpSession session, Model model) {
+		@SuppressWarnings("unchecked")
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
             for (CartItem item : cart) {
@@ -81,6 +84,7 @@ public class CartService {
 	}
 	
 	public String updateCartItem(String dishId,int quantity, HttpSession session) {
+		@SuppressWarnings("unchecked")
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
             for (CartItem item : cart) {
@@ -94,7 +98,8 @@ public class CartService {
 	}
 
 	public String removeFromCart(String dishId, HttpSession session) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        @SuppressWarnings("unchecked")
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
             cart.removeIf(item -> item.getDishId().equals(dishId));
         }
@@ -102,7 +107,8 @@ public class CartService {
     }
 	
 	public String checkoutPage(HttpSession session, Model model) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        @SuppressWarnings("unchecked")
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
         if (cart == null || cart.isEmpty()) {
             return "redirect:/user/cart/view"; 
@@ -117,7 +123,8 @@ public class CartService {
     }
 
 	public String confirmOrder(@RequestParam("address") String address, HttpSession session) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        @SuppressWarnings("unchecked")
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
         if (cart == null || cart.isEmpty()) {
             return "redirect:/user/cart/view";

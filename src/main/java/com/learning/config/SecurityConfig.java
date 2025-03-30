@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.learning.jwt.CustomAuthenticationEntryPoint;
+import com.learning.jwt.CustomUserDetailsService;
+import com.learning.jwt.CustomUserDetailsService2;
 import com.learning.jwt.JwtAuthenticationFilter;
 import com.learning.jwt.JwtSessionFilter;
 import com.learning.jwt.JwtUtil;
@@ -22,9 +25,15 @@ public class SecurityConfig {
 
     @Autowired
     private JwtUtil jwtUtil;
-
+    
     @Autowired
-    private UserDetailsService userDetailService;
+    private CustomUserDetailsService customUserDetailsService;
+    
+    @Autowired
+    private CustomUserDetailsService2 customUserDetailsService2;
+    
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,8 +47,9 @@ public class SecurityConfig {
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+            .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
             .addFilterBefore(new JwtSessionFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthenticationFilter(jwtUtil,userDetailService), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(new JwtAuthenticationFilter(jwtUtil,customUserDetailsService,customUserDetailsService2), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

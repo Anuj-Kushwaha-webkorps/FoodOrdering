@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>user Login</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
 	body {

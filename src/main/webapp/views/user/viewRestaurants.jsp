@@ -93,7 +93,7 @@
 <c:if test="${not empty restaurants}">
     <table border="1">
         <tr>
-			<th>RestaurantId</th>
+			<th>OwnerId</th>
             <th>Name</th>
             <th>Address</th>
             <th>Contact</th>
@@ -101,7 +101,7 @@
         </tr>
         <c:forEach var="restaurant" items="${restaurants}">
             <tr>
-				<td>${restaurant.restaurantId}</td>
+				<td>${restaurant.admin.adminId}</td>
                 <td>${restaurant.name}</td>
                 <td>${restaurant.address}</td>
                 <td>${restaurant.contactNumber}</td>

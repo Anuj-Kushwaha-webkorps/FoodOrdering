@@ -20,6 +20,8 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     
     List<Order> findByStatus(String status);
     
+    List<Order> findByStatusAndUserUserId(String rejected, String userId);
+    
     @Query("SELECT COUNT(o) FROM Order o WHERE o.restaurantId IN :restaurantIds AND o.status = 'PENDING'")
     Long countPendingOrders(@Param("restaurantIds") List<String> restaurantIds);
     

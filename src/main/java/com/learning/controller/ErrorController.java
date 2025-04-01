@@ -1,13 +1,13 @@
-package com.learning.jwt;
+package com.learning.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-public class errorController {
+@RequestMapping("/error")
+public class ErrorController {
 
-	 @GetMapping("/error")
 	    public String error() {
 	        System.out.println("Error for auth");
 	        return "redirect:"; 

@@ -98,7 +98,11 @@ public class AdminController {
     public String loginAdmin(@RequestParam("email") String email,
                               @RequestParam("password") String password,
                               HttpSession session, Model model) {
-    	return adminService.authenticateAdmin(email.trim(), password.trim(),session,model);
+    	if(adminService.authenticateAdmin(email.trim(), password.trim(),session,model)) {
+            return "admin/dashboard";   
+    	}else {
+            return "redirect:/admin/login?error=Invalid+Details";
+    	}
     }
     
     @GetMapping("/logout")

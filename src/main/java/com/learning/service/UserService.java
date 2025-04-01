@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.learning.DTO.UserRegistrationDTO;
 import com.learning.entity.User;
+import com.learning.helper.ObjectFactory;
 import com.learning.repository.UserRepository;
 
 @Service
@@ -15,16 +16,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Boolean saveAdmin(UserRegistrationDTO userRegistrationDTO) {
+    public Boolean saveUser(UserRegistrationDTO userRegistrationDTO) {
     	
-    	User user = User.builder()
-                .userId(java.util.UUID.randomUUID().toString())
-                .name(userRegistrationDTO.getName())
-                .email(userRegistrationDTO.getEmail())
-                .password(userRegistrationDTO.getPassword()) 
-                .address(userRegistrationDTO.getAddress())
-                .phoneNumber(userRegistrationDTO.getPhone())
-                .build();
+    	User user = ObjectFactory.createUserObject(userRegistrationDTO);
 
     	try {    		
     		userRepository.save(user);

@@ -1,4 +1,4 @@
-package com.learning.controller;
+package com.learning.exception;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

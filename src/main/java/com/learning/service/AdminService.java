@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 
 import com.learning.DTO.UserRegistrationDTO;
 import com.learning.entity.Admin;
+import com.learning.helper.ObjectFactory;
 import com.learning.jwt.AuthService;
 import com.learning.repository.AdminRepository;
 
@@ -27,14 +28,7 @@ public class AdminService {
     
     public Boolean saveAdmin(UserRegistrationDTO userRegistrationDTO) {
     	    	
-    	Admin admin = Admin.builder()
-                .adminId(java.util.UUID.randomUUID().toString())
-                .name(userRegistrationDTO.getName())
-                .email(userRegistrationDTO.getEmail())
-                .password(userRegistrationDTO.getPassword()) 
-                .address(userRegistrationDTO.getAddress())
-                .phoneNumber(userRegistrationDTO.getPhone())
-                .build();
+    	Admin admin = ObjectFactory.createAdminObject(userRegistrationDTO);
 
     	try {    		
     		adminRepository.save(admin);
@@ -44,7 +38,7 @@ public class AdminService {
     	}
     }
     
-    public String authenticateAdmin(String email, String password, HttpSession session, Model model) {
+    public Boolean authenticateAdmin(String email, String password, HttpSession session, Model model) {
         Optional<Admin> adminOptional = adminRepository.findByEmail(email);
         if (adminOptional.isPresent() && adminOptional.get().getPassword().equals(password)) {
             Admin admin =  adminOptional.get();  
@@ -53,9 +47,10 @@ public class AdminService {
                 session.setAttribute("jwtToken", token);
                 Long pendingOrderCount = orderService.getPendingOrderCountForAdmin(admin.getAdminId());
                 model.addAttribute("pendingOrderCount", pendingOrderCount);
-                return "admin/dashboard";   
+                return true;
+        }else {
+        	return false;
         }
-        return "redirect:/admin/login?error=Invalid+Details";
     }
 }
 

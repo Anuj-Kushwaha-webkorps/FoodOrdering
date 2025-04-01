@@ -16,7 +16,7 @@ public class JwtUtil {
 
     private final String SECRET_KEY = "malkdasdklfansdfjasldfsdfksdfskxnc5236523652325c"; 
     private final Key signingKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-    private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour in milliseconds
+    private final long EXPIRATION_TIME = 1000 * 60 * 60*24*7; // 7 days in milliseconds
     
     public String generateToken(String email, String role) {
         Map<String, Object> claims = new HashMap<>();

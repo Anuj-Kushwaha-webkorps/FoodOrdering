@@ -88,5 +88,14 @@ public class OrderService {
     public Optional<Order> getOrderById(String orderId){
     	return orderRepository.findById(orderId);
     }
+    
+    public void updateRejectedOrders(String userId) {
+    	List<Order> acceptedOrders = orderRepository.findByStatusAndUserUserId("REJECTED", userId);
+    	
+    	for(Order order : acceptedOrders) {
+    		order.setStatus("REJECTED-SEEN");
+    		orderRepository.save(order);
+    	}
+    }
 }
 

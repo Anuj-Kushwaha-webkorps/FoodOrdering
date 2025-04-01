@@ -18,7 +18,7 @@ public class OrderScheduler {
 
     @Scheduled(fixedRate = 30000) 
     public void cancelUnacceptedOrders() {
-        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(1);
+        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
         List<Order> pendingOrders = orderRepository.findByStatusAndOrderTimeBefore("PENDING", fiveMinutesAgo);
 
         for (Order order : pendingOrders) {
@@ -37,5 +37,6 @@ public class OrderScheduler {
     		orderRepository.save(order);
     	}
     }
+   
 }
 

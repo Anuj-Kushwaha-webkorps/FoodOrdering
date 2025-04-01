@@ -22,24 +22,23 @@ import lombok.NoArgsConstructor;
 public class Dish {
 
     @Id
-    @Column(name = "dish_id")
     private String dishId;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "price", nullable = false)
+    @Column(nullable = false)
     private Double price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "dish_type", nullable = false)
+    @Column(nullable = false)
     private DishType dishType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "dish_size", nullable = false)
+    @Column(nullable = false)
     private DishSize dishSize;
 
     @ManyToOne

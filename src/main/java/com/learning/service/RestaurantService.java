@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.learning.entity.Admin;
 import com.learning.entity.Restaurant;
+import com.learning.helper.ObjectFactory;
+import com.learning.helper.UpdateObjectFactory;
 import com.learning.repository.RestaurantRepository;
 
 import java.util.List;
@@ -25,13 +27,7 @@ public class RestaurantService {
     }
     
     public void addRestaurant(String name, String address, String contact, String adminId) {
-        Restaurant restaurant = Restaurant.builder()
-                .restaurantId(java.util.UUID.randomUUID().toString())
-                .name(name)
-                .address(address)
-                .contactNumber(contact)
-                .admin(Admin.builder().adminId(adminId).build())
-                .build();
+        Restaurant restaurant = ObjectFactory.createRestaurantObject(name, address, contact, adminId);
         restaurantRepository.save(restaurant);
     }
     
@@ -44,9 +40,7 @@ public class RestaurantService {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantId);
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
-            restaurant.setName(name);
-            restaurant.setAddress(address);
-            restaurant.setContactNumber(contact);
+            restaurant = UpdateObjectFactory.updateRestaurantObject(restaurant, name, address, contact);
             restaurantRepository.save(restaurant);
         }
     }

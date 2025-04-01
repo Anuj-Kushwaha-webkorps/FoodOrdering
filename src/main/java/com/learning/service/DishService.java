@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.learning.entity.Dish;
 import com.learning.entity.Restaurant;
+import com.learning.helper.ObjectFactory;
+import com.learning.helper.UpdateObjectFactory;
 import com.learning.repository.DishRepository;
 
 import java.util.List;
@@ -21,15 +23,7 @@ public class DishService {
     }
     
     public void addDish(String restaurantId, String name, String description, Double price, String dishType, String dishSize) {
-        Dish dish = Dish.builder()
-                .dishId(java.util.UUID.randomUUID().toString())
-                .name(name)
-                .description(description)
-                .price(price)
-                .dishType(Dish.DishType.valueOf(dishType))
-                .dishSize(Dish.DishSize.valueOf(dishSize))
-                .restaurant(Restaurant.builder().restaurantId(restaurantId).build())
-                .build();
+        Dish dish = ObjectFactory.createDishObject(restaurantId, name, description, price, dishType, dishSize);
         dishRepository.save(dish);
     }
     
@@ -42,11 +36,7 @@ public class DishService {
         Optional<Dish> dishOptional = dishRepository.findById(dishId);
         if (dishOptional.isPresent()) {
             Dish dish = dishOptional.get();
-            dish.setName(name);
-            dish.setDescription(description);
-            dish.setPrice(price);
-            dish.setDishType(Dish.DishType.valueOf(dishType));
-            dish.setDishSize(Dish.DishSize.valueOf(dishSize));
+            dish = UpdateObjectFactory.updateDishObject(dish, dishId, name, description, price, dishType, dishSize);
             dishRepository.save(dish);
         }
     }

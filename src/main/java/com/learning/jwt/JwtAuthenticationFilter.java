@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomUserDetailsService2 customUserDetailsService2;
 
-    @Autowired
+  
     public JwtAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService,CustomUserDetailsService2 customUserDetailsService2) {
         this.jwtUtil = jwtUtil;
         this.customUserDetailsService = customUserDetailsService;
@@ -38,6 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
     	HttpSession session = request.getSession(false);
+    	
+    	String requestURI = request.getRequestURI();
+
+        if (requestURI.equals("/") || requestURI.startsWith("/public/")) {
+            chain.doFilter(request, response);
+            return;
+        }
     	
         String header = request.getHeader("Authorization");
         String email = null;
@@ -71,12 +76,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     	
     }catch(io.jsonwebtoken.ExpiredJwtException ex){
-    	System.out.println("redirecting to login page because of expired jwt");
-    	response.sendRedirect("/admin/login");
+    	System.out.println("Session expired : custom");
+    	response.sendRedirect("/");
     	return;
     }catch(org.springframework.security.core.userdetails.UsernameNotFoundException u) {
-    	System.out.println("redirecting to login page from unauth");
-    	response.sendRedirect("/admin/login");
+    	System.out.println("user not found exception");
+    	response.sendRedirect("/");
     	return;
     }
         chain.doFilter(request, response);

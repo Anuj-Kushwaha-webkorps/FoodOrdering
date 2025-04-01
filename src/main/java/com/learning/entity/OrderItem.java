@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 public class OrderItem {
 
     @Id
-    @Column(name = "order_item_id")
     private String orderItemId;
 
     @ManyToOne
@@ -33,13 +32,13 @@ public class OrderItem {
     @JoinColumn(name = "dish_id", nullable = false)
     private Dish dish;
 
-    @Column(name = "dish_name", nullable = false)
+    @Column(nullable = false)
     private String dishName;
 
-    @Column(name = "quantity", nullable = false)
+    @Column(nullable = false)
     private int quantity;
 
-    @Column(name = "price_per_item", nullable = false)
+    @Column(nullable = false)
     private Double pricePerItem;
     
     @Override

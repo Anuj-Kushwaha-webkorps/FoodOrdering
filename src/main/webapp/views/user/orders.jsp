@@ -156,5 +156,18 @@
 </c:if>
 
 <a href="/user/dashboard">Back to Dashboard</a>
+
+<script>
+	
+	fetch('/user/orders/rejectedSeen')
+		        .then(response => response.json())  
+		        .then(data => {
+		           console.log(data.msg);
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		        });
+
+</script>
 </body>
 </html>

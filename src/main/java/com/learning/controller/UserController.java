@@ -77,7 +77,7 @@ public class UserController {
     		return ResponseEntity.ok(response);
     	}
     	
-    	if(!userService.saveAdmin(registrationDTO)) {
+    	if(!userService.saveUser(registrationDTO)) {
     		response.put("redirectUrl", "/user/register?error=Internal+Server+Error");
     		return ResponseEntity.ok(response);
     	}

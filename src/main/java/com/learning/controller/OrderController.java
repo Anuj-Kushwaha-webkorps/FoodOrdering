@@ -1,6 +1,8 @@
 package com.learning.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +66,15 @@ public class OrderController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Order_" + orderId + ".pdf")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdfBytes);
+    }
+    
+    @GetMapping("/rejectedSeen")
+    public ResponseEntity<Map<String, String>> updateRejected(HttpSession session){
+    	Map<String, String> map = new HashMap<>();
+    	User loggedInUser = (User) session.getAttribute("loggedInUser");
+    	orderService.updateRejectedOrders(loggedInUser.getUserId());
+    	
+    	map.put("msg", "updated Successfully");
+    	return ResponseEntity.ok(map);
     }
 }

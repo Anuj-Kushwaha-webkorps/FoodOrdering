@@ -23,38 +23,49 @@ public class CartController {
 
     @GetMapping("/add/{dishId}")
     public String addToCart(@PathVariable String dishId, HttpSession session) {
-    	return cartService.addToCart(dishId, session);
+    	if(cartService.addToCart(dishId, session)) {
+            return "redirect:/user/cart/view";
+    	}else {
+        	return "redirect:/user/cart/view?error=Restaurant+Owner+is+different";
+    	}
     }
 
     @GetMapping("/view")
     public String viewCart(HttpSession session, Model model) {
-        return cartService.viewCart(session, model);
+        cartService.viewCart(session, model);
+        return "user/cart";
     }
     
     @GetMapping("/edit/{dishId}")
     public String editCartItem(@PathVariable String dishId, HttpSession session, Model model) {
-        return cartService.editCartItem(dishId, session, model);
+        cartService.editCartItem(dishId, session, model);
+            return "user/editCartItem";
     }
 
     @PostMapping("/update")
     public String updateCartItem(@RequestParam("dishId") String dishId,
                                  @RequestParam("quantity") int quantity,
                                  HttpSession session) {
-        return cartService.updateCartItem(dishId, quantity, session);
+        cartService.updateCartItem(dishId, quantity, session);
+        return "redirect:/user/cart/view";
+
     }
 
     @GetMapping("/remove/{dishId}")
     public String removeFromCart(@PathVariable String dishId, HttpSession session) {
-        return cartService.removeFromCart(dishId, session);
+        cartService.removeFromCart(dishId, session);
+        return "redirect:/user/cart/view";
     }
     
     @GetMapping("/checkout")
     public String checkoutPage(HttpSession session, Model model) {
-        return cartService.checkoutPage(session, model);
+        cartService.checkoutPage(session, model);
+        return "user/checkout";
     }
     
     @PostMapping("/confirm-order")
     public String confirmOrder(@RequestParam("address") String address, HttpSession session) {
-        return cartService.confirmOrder(address, session);
+        cartService.confirmOrder(address, session);
+        return "redirect:/user/orders";
     }
 }

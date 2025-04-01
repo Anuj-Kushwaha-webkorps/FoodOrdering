@@ -18,21 +18,20 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(name = "address", nullable = false)
+    @Column(nullable = false)
     private String address;
 }

@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -37,16 +36,12 @@ public class SecurityConfig {
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable()
-            .authorizeRequests()
-            .requestMatchers("/","/error","/views/admin/login.jsp", "/user/register", "/user/login", "/admin/register", "/admin/login").permitAll() 
+        http.csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth->
+            auth.requestMatchers("/", "/user/register", "/user/login", "/admin/register", "/admin/login").permitAll() 
             .requestMatchers("/views/**").permitAll()
-            .requestMatchers("/resources/**", "/static/**", "/templates/**").permitAll() 
-            .anyRequest().authenticated()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
+            .anyRequest().authenticated())
+            .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
             .addFilterBefore(new JwtSessionFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil,customUserDetailsService,customUserDetailsService2), UsernamePasswordAuthenticationFilter.class);

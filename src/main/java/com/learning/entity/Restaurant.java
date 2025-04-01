@@ -20,16 +20,15 @@ import lombok.NoArgsConstructor;
 public class Restaurant {
 
     @Id
-    @Column(name = "restaurant_id")
     private String restaurantId;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "address", nullable = false)
+    @Column(nullable = false)
     private String address;
 
-    @Column(name = "contact_number", nullable = false)
+    @Column(nullable = false)
     private String contactNumber;
 
     @ManyToOne

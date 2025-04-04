@@ -77,6 +77,12 @@
 			    font-size: 16px;
 			    transition: background 0.3s ease;
 			}
+			
+	.error{
+		color : red;
+		padding : 5px;
+	}
+			
 	@media (max-width: 600px) {
 	    form {
 	        width: 95%;
@@ -93,18 +99,27 @@
 
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required><br>
+	
+	<div id="errorEmail" class="error"></div>
 
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required><br>
+	
+	<div id="errorPassword" class="error"></div>
 
     <label for="address">Address:</label>
     <textarea id="address" name="address" required></textarea><br>
-
+	
     <label for="phone">Phone:</label>
     <input type="text" id="phone" name="phone" required><br>
 	
+	<div id="errorPhone" class="error"></div>
+	
 	<!-- Google reCAPTCHA -->
 	<div class="g-recaptcha" data-sitekey="6LfJFvcqAAAAAMu6gbNsXjNPR338LkK1_ZFlx4YE"></div>
+	
+	<div id="errorCaptcha" class="error"></div>
+
 
     <button id="submitBtn" type="submit">Register</button>
 </form>
@@ -116,7 +131,7 @@
 	document.getElementById('submitBtn').addEventListener('click',
 	    function(e) {
 			e.preventDefault();
-			console.log("anuj");
+			
 	        const formData = {
 	            name: document.querySelector('input[name="name"]').value,
 	            email: document.querySelector('input[name="email"]').value,
@@ -125,6 +140,7 @@
 				phone : document.querySelector('input[name="phone"]').value,
 				recaptcha: grecaptcha.getResponse()
 	        };
+			
 	        fetch('/admin/register', {
 	            method: 'POST',
 	            headers: {
@@ -134,24 +150,35 @@
 	        })
 	        .then(response => response.json())  
 	        .then(data => {
-	            if (data.redirectUrl) {
-	            	console.log("in redirect");
+				eraseMsg();
+				
+				if(data.redirectUrl != null) {
 	            	 window.location.href = data.redirectUrl;
-	            }
+	            }else{
+					displayError('errorEmail', data.errorEmail);
+					displayError('errorPhone', data.errorPhone);
+					displayError('errorCaptcha', data.errorCaptcha);
+					displayError('errorPassword', data.errorPassword);
+					displayError('errorCaptcha', data.errorCaptcha);
+				}
 	        })
 	        .catch(error => {
 	            console.error('Error:', error);
 	        });
 	    }
 	    );
+		
+		function eraseMsg(){
+			document.querySelectorAll('.error').forEach(el => el.innerText = "");
+			grecaptcha.reset();
+		}
+		
+		function displayError(elementId, message) {
+			if(message){
+		    	document.getElementById(elementId).innerText = message;
+			}
+		}
 	
-	<% 
-	  String error = request.getParameter("error");
-	  System.out.println(error);
-	  if (error != null) { 
-	  %>
-	      alert("<%= error %>"); 
-	  <% } %>
 </script>
 
 

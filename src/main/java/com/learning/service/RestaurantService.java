@@ -3,7 +3,7 @@ package com.learning.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.learning.entity.Admin;
+import com.learning.DTO.RestaurantDTO;
 import com.learning.entity.Restaurant;
 import com.learning.helper.ObjectFactory;
 import com.learning.helper.UpdateObjectFactory;
@@ -26,8 +26,8 @@ public class RestaurantService {
         return restaurantRepository.findByAdminAdminId(adminId);
     }
     
-    public void addRestaurant(String name, String address, String contact, String adminId) {
-        Restaurant restaurant = ObjectFactory.createRestaurantObject(name, address, contact, adminId);
+    public void addRestaurant(RestaurantDTO restaurantDTO, String adminId) {
+        Restaurant restaurant = ObjectFactory.createRestaurantObject(restaurantDTO.getName(), restaurantDTO.getAddress(), restaurantDTO.getContact(), adminId);
         restaurantRepository.save(restaurant);
     }
     
@@ -36,11 +36,11 @@ public class RestaurantService {
         return restaurant.orElse(null);
     }
 
-    public void updateRestaurant(String restaurantId, String name, String address, String contact) {
-        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantId);
+    public void updateRestaurant(RestaurantDTO restaurantDTO) {
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantDTO.getRestaurantId());
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
-            restaurant = UpdateObjectFactory.updateRestaurantObject(restaurant, name, address, contact);
+            restaurant = UpdateObjectFactory.updateRestaurantObject(restaurant, restaurantDTO.getName(), restaurantDTO.getAddress(), restaurantDTO.getContact());
             restaurantRepository.save(restaurant);
         }
     }

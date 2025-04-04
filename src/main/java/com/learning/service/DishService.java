@@ -3,8 +3,8 @@ package com.learning.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.learning.DTO.DishDTO;
 import com.learning.entity.Dish;
-import com.learning.entity.Restaurant;
 import com.learning.helper.ObjectFactory;
 import com.learning.helper.UpdateObjectFactory;
 import com.learning.repository.DishRepository;
@@ -22,8 +22,8 @@ public class DishService {
         return dishRepository.findByRestaurantRestaurantId(restaurantId);
     }
     
-    public void addDish(String restaurantId, String name, String description, Double price, String dishType, String dishSize) {
-        Dish dish = ObjectFactory.createDishObject(restaurantId, name, description, price, dishType, dishSize);
+    public void addDish(DishDTO dishDTO, String restaurantId) {
+        Dish dish = ObjectFactory.createDishObject(restaurantId, dishDTO.getName(), dishDTO.getDescription(), dishDTO.getPrice(), dishDTO.getDishType(), dishDTO.getDishSize());
         dishRepository.save(dish);
     }
     
@@ -32,11 +32,11 @@ public class DishService {
         return dish.orElse(null);
     }
 
-    public void updateDish(String dishId, String name, String description, Double price, String dishType, String dishSize) {
-        Optional<Dish> dishOptional = dishRepository.findById(dishId);
+    public void updateDish(DishDTO dishDTO) {
+        Optional<Dish> dishOptional = dishRepository.findById(dishDTO.getDishId());
         if (dishOptional.isPresent()) {
             Dish dish = dishOptional.get();
-            dish = UpdateObjectFactory.updateDishObject(dish, dishId, name, description, price, dishType, dishSize);
+            dish = UpdateObjectFactory.updateDishObject(dish, dishDTO.getDishId(), dishDTO.getName(), dishDTO.getDescription(), dishDTO.getPrice(), dishDTO.getDishType(), dishDTO.getDishSize());
             dishRepository.save(dish);
         }
     }

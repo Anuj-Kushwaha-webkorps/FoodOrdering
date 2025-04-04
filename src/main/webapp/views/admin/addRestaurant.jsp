@@ -80,6 +80,11 @@
 	a:hover {
 	    text-decoration: underline;
 	}
+	
+	.error{
+			color : red;
+			padding : 5px;
+		}
  
 	@media (max-width: 600px) {
 	    form {
@@ -104,21 +109,46 @@
 
     <label for="contact">Contact Number:</label>
     <input type="text" id="contact" name="contact" required><br>
+	
+	<div id="errorContact" class="error"></div>
 
-    <button type="submit">Add Restaurant</button>
+    <button id="submitBtn" type="submit">Add Restaurant</button>
 </form>
 
 <a href="/admin/restaurants">Back to Restaurant List</a><strong> | </strong>
 <a href="/admin/dashboard">Back to Dashboard</a>
 
 <script>
-	<% 
-			  String error = request.getParameter("error");
-			  System.out.println(error);
-			  if (error != null) { 
-			  %>
-			      alert("<%= error %>"); 
-			  <% } %>
+	document.getElementById('submitBtn').addEventListener('click',
+			    function(e) {
+					e.preventDefault();
+					
+			        const formData = {
+			            name: document.querySelector('input[name="name"]').value,
+			            address: document.querySelector('textarea[name="address"]').value,
+			            contact: document.querySelector('input[name="contact"]').value	            
+			        };
+										
+			        fetch('/admin/restaurants/add', {
+			            method: 'POST',
+			            headers: {
+			                'Content-Type': 'application/json' 
+			            },
+			            body: JSON.stringify(formData)
+			        })
+			        .then(response => response.json())  
+			        .then(data => {
+						if(data.redirectUrl != null) {
+			            	 window.location.href = data.redirectUrl;
+			            }else{
+							document.getElementById("errorContact").innerText = data.errorContact;
+						}
+			        })
+			        .catch(error => {
+			            console.error('Error:', error);
+			        });
+			    }
+		);
 </script>
 </body>
 </html>

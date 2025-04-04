@@ -1,15 +1,23 @@
 package com.learning.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.learning.DTO.DishDTO;
 import com.learning.entity.Dish;
 import com.learning.helper.Validation;
 import com.learning.service.DishService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin/restaurants/{restaurantId}/dishes")
@@ -31,22 +39,21 @@ public class DishController {
         model.addAttribute("restaurantId", restaurantId);
         return "admin/addDish";
     }
-
+    
     @PostMapping("/add")
-    public String addDish(@PathVariable String restaurantId,
-                          @RequestParam("name") String name,
-                          @RequestParam("description") String description,
-                          @RequestParam("price") Double price,
-                          @RequestParam("dishType") String dishType,
-                          @RequestParam("dishSize") String dishSize) {
-    	
-    	if(!Validation.priceValidation(price+"")) {
-    		return "redirect:/admin/restaurants/" + restaurantId + "/dishes/add?error=Invalid+Price";
+    public ResponseEntity<Map<String, String>> addDish(@RequestBody DishDTO dishDTO,@PathVariable String restaurantId){
+    	Map<String, String> response = new HashMap<>();
+    	if(!Validation.priceValidation(dishDTO.getPrice()+"")) {
+    		response.put("errorPrice", "Invalid Price");
+    		return ResponseEntity.ok(response);
     	}
     	
-        dishService.addDish(restaurantId, name, description, price, dishType, dishSize);
-        return "redirect:/admin/restaurants/" + restaurantId + "/dishes";
+    	dishService.addDish(dishDTO, restaurantId);
+    	response.put("redirectUrl", "/admin/restaurants/" + restaurantId + "/dishes");
+    	return ResponseEntity.ok(response);
     }
+    
+    
     
     @GetMapping("/edit/{dishId}")
     public String showEditDishForm(@PathVariable String restaurantId, @PathVariable String dishId, Model model) {
@@ -56,21 +63,18 @@ public class DishController {
         return "admin/editDish";
     }
 
+    
     @PostMapping("/edit")
-    public String editDish(@PathVariable String restaurantId,
-                           @RequestParam("dishId") String dishId,
-                           @RequestParam("name") String name,
-                           @RequestParam("description") String description,
-                           @RequestParam("price") Double price,
-                           @RequestParam("dishType") String dishType,
-                           @RequestParam("dishSize") String dishSize) {
-    	
-    	if(!Validation.priceValidation(price+"")) {
-    		return "redirect:/admin/restaurants/" + restaurantId + "/dishes/edit/"+ dishId +"?error=Invalid+Price";
+    public ResponseEntity<Map<String, String>> editDish(@RequestBody DishDTO dishDTO,@PathVariable String restaurantId){
+    	Map<String, String> response = new HashMap<>();
+    	if(!Validation.priceValidation(dishDTO.getPrice()+"")) {
+    		response.put("errorPrice", "Invalid Price");
+    		return ResponseEntity.ok(response);
     	}
     	
-        dishService.updateDish(dishId, name, description, price, dishType, dishSize);
-        return "redirect:/admin/restaurants/" + restaurantId + "/dishes";
+    	dishService.updateDish(dishDTO);
+    	response.put("redirectUrl", "/admin/restaurants/" + restaurantId + "/dishes");
+    	return ResponseEntity.ok(response);
     }
 
     @GetMapping("/delete/{dishId}")

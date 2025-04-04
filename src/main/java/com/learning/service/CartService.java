@@ -2,6 +2,7 @@ package com.learning.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,27 +30,33 @@ public class CartService {
 	public Boolean addToCart(String dishId, HttpSession session) {
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         Dish dish = dishService.getDishById(dishId);
-        String adminId2 = dishService.getDishById(dish.getDishId()).getRestaurant().getAdmin().getAdminId();
-        String adminId1 = "";
+        
+        if (dish == null) {
+            return false;
+        }
+        
+        String newAdminId = dish.getRestaurant().getAdmin().getAdminId();
         
         if (cart == null) {
             cart = new ArrayList<>();
             session.setAttribute("cart", cart);
-            adminId1 = adminId2;
         }else {
-        	 adminId1 = dishService.getDishById(cart.get(0).getDishId()).getRestaurant().getAdmin().getAdminId();
+        	String existingAdminId = dishService.getDishById(cart.get(0).getDishId()).getRestaurant().getAdmin().getAdminId();
+			if (!existingAdminId.equals(newAdminId)) {
+				return false; 
+			}
         }
         
-        cart.stream()
-        .filter(item -> item.getDishId().equals(dishId))
-        .findFirst()
-        .ifPresent(item -> item.setQuantity(item.getQuantity() + 1));
+        Optional<CartItem> existingItem = cart.stream()
+                .filter(item -> item.getDishId().equals(dishId))
+                .findAny();
 
-        if(!adminId1.equals(adminId2)) {
-        	return false;
-        }
-        cart.add(new CartItem(dishId, dish.getName(), dish.getPrice(), dish.getDishSize().name(), 1));
-        return true;
+		if (existingItem.isPresent()) {
+			 existingItem.get().setQuantity(existingItem.get().getQuantity() + 1);
+		} else {
+			cart.add(new CartItem(dishId, dish.getName(), dish.getPrice(), dish.getDishSize().name(), 1));
+		}
+		     return true;
 	}
 	
     @SuppressWarnings("unchecked")
@@ -65,22 +72,21 @@ public class CartService {
 	public void editCartItem(String dishId, HttpSession session, Model model) {
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
-		for (CartItem item : cart) {
-                if (item.getDishId().equals(dishId)) {
-                    model.addAttribute("cartItem", item);
-                }
-         }    
+		cart.stream()
+	    .filter(item -> item.getDishId().equals(dishId))
+	    .findAny()
+	    .ifPresent(item -> model.addAttribute("cartItem", item));
+ 
 	}
 	
     @SuppressWarnings("unchecked")
 	public void updateCartItem(String dishId,int quantity, HttpSession session) {
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-            for (CartItem item : cart) {
-                if (item.getDishId().equals(dishId)) {
-                    item.setQuantity(quantity);
-                    break;
-                }
-            }      
+		cart.stream()
+	    .filter(item -> item.getDishId().equals(dishId))
+	    .findAny() 
+	    .ifPresent(item -> item.setQuantity(quantity));
+    
 	}
 
     @SuppressWarnings("unchecked")

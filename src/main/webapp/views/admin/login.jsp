@@ -63,15 +63,20 @@
 	}
 
 	a {
-			    display: block;
-			    text-decoration: none;
-			    background-color: #007bff;
-			    color: white;
-			    padding: 12px;
-			    border-radius: 5px;
-			    font-size: 16px;
-			    transition: background 0.3s ease;
-			}
+	    display: block;
+	    text-decoration: none;
+	    background-color: #007bff;
+	    color: white;
+	    padding: 12px;
+	    border-radius: 5px;
+	    font-size: 16px;
+	    transition: background 0.3s ease;
+	}
+	
+	.error{
+		color : red;
+		padding : 5px;
+	}
 	@media (max-width: 600px) {
 	    form {
 	        width: 95%;
@@ -88,18 +93,43 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required><br>
 
-    <button type="submit">Login</button>
+	<div id="errorMsg" class="error"></div>
+
+    <button id="submitBtn" type="submit">Login</button>
 </form>
 <a href="/">Home</a>
 
 <script>
-	<% 
-	  String error = request.getParameter("error");
-	  System.out.println(error);
-	  if (error != null) { 
-	  %>
-	      alert("<%= error %>"); 
-	  <% } %>
+	document.getElementById('submitBtn').addEventListener('click',
+		    function(e) {
+				e.preventDefault();
+				
+		        const formData = {
+		            email: document.querySelector('input[name="email"]').value,
+		            password: document.querySelector('input[name="password"]').value		            
+		        };
+				
+		        fetch('/admin/login', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json' 
+		            },
+		            body: JSON.stringify(formData)
+		        })
+		        .then(response => response.json())  
+		        .then(data => {
+					if(data.redirectUrl != null) {
+		            	 window.location.href = data.redirectUrl;
+		            }else{
+						document.getElementById('errorMsg').innerText = data.errorMsg;
+					}
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		        });
+		    }
+		    );
+			
 </script>
 </body>
 </html>

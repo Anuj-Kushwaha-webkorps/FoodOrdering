@@ -77,6 +77,10 @@
 	    background-color: #c82333;
 	}
 
+	.error{
+			color : red;
+			padding : 5px;
+		}
 	@media (max-width: 768px) {
 	    form {
 	        width: 90%;
@@ -104,20 +108,46 @@
     <label for="contact">Contact Number:</label>
     <input type="text" id="contact" name="contact" value="${restaurant.contactNumber}" required><br>
 
-    <button type="submit">Update Restaurant</button>
+	<div id="errorContact" class="error"></div>
+
+    <button id="submitBtn" type="submit">Update Restaurant</button>
 </form>
 
 <a href="/admin/restaurants">Back to Restaurant List</a><strong> | </strong>
 <a href="/admin/dashboard">Back to Dashboard</a>
 
 <script>
-	<% 
-			  String error = request.getParameter("error");
-			  System.out.println(error);
-			  if (error != null) { 
-			  %>
-			      alert("<%= error %>"); 
-			  <% } %>
+	document.getElementById('submitBtn').addEventListener('click',
+		    function(e) {
+				e.preventDefault();
+				
+		        const formData = {
+					restaurantId: document.querySelector('input[name="restaurantId"]').value,
+		            name: document.querySelector('input[name="name"]').value,
+		            address: document.querySelector('textarea[name="address"]').value,
+		            contact: document.querySelector('input[name="contact"]').value	            
+		        };
+									
+		        fetch('/admin/restaurants/edit', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json' 
+		            },
+		            body: JSON.stringify(formData)
+		        })
+		        .then(response => response.json())  
+		        .then(data => {
+					if(data.redirectUrl != null) {
+		            	 window.location.href = data.redirectUrl;
+		            }else{
+						document.getElementById("errorContact").innerText = data.errorContact;
+					}
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		        });
+		    }
+	);
 </script>
 </body>
 </html>

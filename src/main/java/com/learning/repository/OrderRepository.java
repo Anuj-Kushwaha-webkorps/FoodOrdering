@@ -12,11 +12,15 @@ import com.learning.entity.Order;
 public interface OrderRepository extends JpaRepository<Order, String> {
 	List<Order> findByUserUserId(String userId);
 	
-	List<Order> findByUserUserIdAndStatusNot(String userId, String status);
+	List<Order> findByUserUserIdAndStatusIn(String userId, List<String> statusIn);
+	
+	List<Order> findByUserUserIdAndStatusNotInOrderByOrderTimeDesc(String userId, List<String> statusNotIn);
 	
     List<Order> findByStatusAndOrderTimeBefore(String status, LocalDateTime orderTime);
 
     List<Order> findByRestaurantIdIn(List<String> restaurantIds);
+    
+    List<Order> findByRestaurantIdInAndStatusIn(List<String> restaurantIds, List<String> statusIn);
     
     List<Order> findByStatus(String status);
     

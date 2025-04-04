@@ -104,6 +104,8 @@
     <label for="price">Price:</label>
     <input type="number" id="price" name="price" step="0.01" required><br>
 
+	<div id="errorPrice" class="error"></div>
+
     <label for="dishType">Type:</label>
     <select id="dishType" name="dishType" required>
         <option value="VEG">Veg</option>
@@ -116,19 +118,45 @@
         <option value="FULL">Full Plate</option>
     </select><br>
 
-    <button type="submit">Add Dish</button>
+    <button id="submitBtn" type="submit">Add Dish</button>
 </form>
 
 <a href="/admin/restaurants/${restaurantId}/dishes">Back to Dishes</a>
 
 <script>
-	<% 
-	  String error = request.getParameter("error");
-	  System.out.println(error);
-	  if (error != null) { 
-	  %>
-	      alert("<%= error %>"); 
-	<% } %>
+	document.getElementById('submitBtn').addEventListener('click',
+		    function(e) {
+				e.preventDefault();
+				
+		        const formData = {
+		            name: document.querySelector('input[name="name"]').value,
+		            description: document.querySelector('textarea[name="description"]').value,
+		            price: document.querySelector('input[name="price"]').value,
+		            dishType : document.querySelector('#dishType').value,
+					dishSize : document.querySelector('#dishSize').value,
+		        };
+				
+		        fetch('/admin/restaurants/<%= request.getAttribute("restaurantId") %>/dishes/add', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json' 
+		            },
+		            body: JSON.stringify(formData)
+		        })
+		        .then(response => response.json())  
+		        .then(data => {
+					
+					if(data.redirectUrl != null) {
+		            	 window.location.href = data.redirectUrl;
+		            }else{
+						document.getElementById("errorPrice").innerText = data.errorPrice;
+					}
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		        });
+		    }
+		    );
 </script>
 </body>
 </html>

@@ -13,6 +13,7 @@ import com.learning.service.DishService;
 import com.learning.service.RestaurantService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
@@ -27,6 +28,7 @@ public class UserRestaurantController {
     @GetMapping("/restaurants")
     public String showAvailableRestaurants(Model model) {
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+        restaurants = restaurants.stream().filter(restaurant -> dishService.getDishesByRestaurantId(restaurant.getRestaurantId()).size() > 0).collect(Collectors.toList());
         model.addAttribute("restaurants", restaurants);
         return "user/viewRestaurants";
     }

@@ -2,7 +2,6 @@ package com.learning.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.learning.DTO.LoginDTO;
 import com.learning.DTO.UserRegistrationDTO;
 import com.learning.entity.Admin;
-import com.learning.helper.Validation;
-import com.learning.repository.AdminRepository;
 import com.learning.service.AdminService;
-import com.learning.service.CaptchaValidatorService;
 import com.learning.service.OrderService;
 
 import jakarta.servlet.http.HttpSession;
@@ -35,12 +31,7 @@ public class AdminController {
     
     @Autowired
     private OrderService orderService;
-    
-    @Autowired
-    private CaptchaValidatorService captchaValidatorService;
-    
-    @Autowired
-    private AdminRepository adminRepository;
+        
 
     @GetMapping("/register")
     public String showRegistrationForm() {
@@ -48,43 +39,8 @@ public class AdminController {
     }
     
     @PostMapping("/register")
-	public ResponseEntity<Map<String, String>> userRegistrationHandler(@RequestBody UserRegistrationDTO registrationDTO, HttpSession session) {
-    	Map<String, String> response = new HashMap<>();
-    	if (!captchaValidatorService.isCaptchaValid(registrationDTO.getRecaptcha())) {
-    		response.put("redirectUrl", "/admin/register?error=Captcha+Invalid");
-            return ResponseEntity.ok(response);
-        }
-    	
-    	if(!Validation.emailValidation(registrationDTO.getEmail())) {
-    		response.put("redirectUrl", "/admin/register?error=Invalid+Email+Details");
-            return ResponseEntity.ok(response);
-    	}
-    	
-    	if(!Validation.passwordValidation(registrationDTO.getPassword())) {
-    		String msg = "Password must have at least 8 character with atleast 1 small and capital letter, 1 digit and 1 Special character";
-    		response.put("redirectUrl", "/admin/register?error=Invalid+password"+msg);
-    		return ResponseEntity.ok(response);
-    	}
-    	
-    	if(!Validation.isValidPhoneNumber(registrationDTO.getPhone())) {
-    		String msg = "Invalide phone number ! phone number must have 10 digits.";
-    		response.put("redirectUrl", "/admin/register?error=Invalid+phone+number"+msg);
-            return ResponseEntity.ok(response);
-    	}
-    	
-    	Optional<Admin> ad = adminRepository.findByEmail(registrationDTO.getEmail());
-    	
-    	if(ad.isPresent()) {
-    		response.put("redirectUrl", "/admin/register?error=User+Already+Exist+With+Provided+Email");
-    		return ResponseEntity.ok(response);
-    	}
-    	
-    	if(!adminService.saveAdmin(registrationDTO)) {
-    		response.put("redirectUrl", "/admin/register?error=Internal+Server+Error");
-    		return ResponseEntity.ok(response);
-    	}
-    	
-		response.put("redirectUrl", "/admin/login");
+	public ResponseEntity<Map<String, String>> userRegistrationHandler(@RequestBody UserRegistrationDTO registrationDTO) {
+    	Map<String, String> response = adminService.saveAdmin(registrationDTO);
     	return ResponseEntity.ok(response);
     }
     
@@ -93,15 +49,15 @@ public class AdminController {
     public String showLoginForm() {
         return "admin/login";
     }
-    
+  
     @PostMapping("/login")
-    public String loginAdmin(@RequestParam("email") String email,
-                              @RequestParam("password") String password,
-                              HttpSession session, Model model) {
-    	if(adminService.authenticateAdmin(email.trim(), password.trim(),session,model)) {
-            return "admin/dashboard";   
+    public ResponseEntity<Map<String, String>> loginAdmin(@RequestBody LoginDTO loginDTO, HttpSession session, Model model) {
+    	Map<String, String> response = new HashMap<>();
+    	if(adminService.authenticateAdmin(loginDTO.getEmail().trim(), loginDTO.getPassword(),session,response)) {
+            response.put("redirectUrl", "/admin/dashboard");   
+    		return ResponseEntity.ok(response);
     	}else {
-            return "redirect:/admin/login?error=Invalid+Details";
+    		return ResponseEntity.ok(response);
     	}
     }
     

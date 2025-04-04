@@ -36,7 +36,7 @@ public class OrderController {
     @GetMapping
     public String viewUserOrders(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        List<Order> userOrders = orderService.getOrdersByUserId(loggedInUser.getUserId());
+        List<Order> userOrders = orderService.getOrdersByUserIdAndStatusIn(loggedInUser.getUserId());
         model.addAttribute("orders", userOrders);
         return "user/orders";
     }

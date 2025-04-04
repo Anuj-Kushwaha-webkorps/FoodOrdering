@@ -1,5 +1,6 @@
 package com.learning.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,8 +22,13 @@ public class OrderService {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
-    public List<Order> getOrdersByUserId(String userId) {
-        return orderRepository.findByUserUserId(userId);
+    public List<Order> getOrdersByUserIdAndStatusIn(String userId) {
+    	List<String> statusIn = new ArrayList<>();
+    	statusIn.add("PENDING");
+    	statusIn.add("ACCEPTED");
+    	statusIn.add("REJECTED");
+
+        return orderRepository.findByUserUserIdAndStatusIn(userId, statusIn);
     }
 
     public void cancelOrder(String orderId, String userId) {
@@ -46,8 +52,10 @@ public class OrderService {
         List<String> restaurantIds = restaurants.stream()
                 .map(Restaurant::getRestaurantId)
                 .collect(Collectors.toList());
-
-        return orderRepository.findByRestaurantIdIn(restaurantIds);
+        List<String> statusIn = new ArrayList<>();
+    	statusIn.add("PENDING");
+    	statusIn.add("ACCEPTED");
+        return orderRepository.findByRestaurantIdInAndStatusIn(restaurantIds, statusIn);
     }
    
 
@@ -78,7 +86,10 @@ public class OrderService {
     }
     
     public List<Order> getPastOrdersByUserId(String userId) {
-        return  orderRepository.findByUserUserIdAndStatusNot(userId, "PENDING");
+    	List<String> statusNotIn = new ArrayList<>();
+    	statusNotIn.add("PENDING");
+    	statusNotIn.add("ACCEPTED");
+        return  orderRepository.findByUserUserIdAndStatusNotInOrderByOrderTimeDesc(userId, statusNotIn);
     }
     
     public Long getAcceptedAndRejectedOrdersByUserId(String userId) {
@@ -92,10 +103,12 @@ public class OrderService {
     public void updateRejectedOrders(String userId) {
     	List<Order> acceptedOrders = orderRepository.findByStatusAndUserUserId("REJECTED", userId);
     	
-    	for(Order order : acceptedOrders) {
-    		order.setStatus("REJECTED-SEEN");
-    		orderRepository.save(order);
-    	}
+    	acceptedOrders.forEach(order -> {
+    	    order.setStatus("REJECTED-SEEN");
+    	    orderRepository.save(order);
+    	});
+
+
     }
 }
 
